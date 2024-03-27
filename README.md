@@ -1,5 +1,7 @@
 # Loud Numbers
 
+This is a remix of the [Loud Numbers](http://github.com/loudnumbers/loudnumbers_norns) script for Ben Dexter-Cooley.
+
 Loud Numbers is a [data sonification](https://www.loudnumbers.net/sonification) script for Norns. It turns .csv files into melodies and control voltages.
 
 You can select the root note and scale with encoders 2 and 3. Encoder 1 selects the bpm. Key 2 toggles play/pause, and key 3 toggles whether the melody should loop when you reach the end of the dataset or not.
@@ -13,7 +15,7 @@ Optional: Grid, Crow
 
 ## Instructions
 
-Place data files in the we/data/loudnumbers_norns/csv folder - the same folder as _temperatures.csv. Once you've loaded your file, restart the script and select it through the parameters menu.
+Place data files in the we/data/loudnumbers_norns/csv folder - the same folder as_temperatures.csv. Once you've loaded your file, restart the script and select it through the parameters menu.
 
 - KEY 2: toggle play/pause
 - KEY 3: toggle loop
