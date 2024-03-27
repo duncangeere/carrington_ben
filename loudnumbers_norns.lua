@@ -1,3 +1,4 @@
+---@diagnostic disable: undefined-global, lowercase-global
 -- loudnumbers_norns
 -- v0.17 @duncangeere
 -- https://llllllll.co/t/51353
@@ -24,6 +25,14 @@
 --
 music = require("musicutil")
 -- Import musicutil library: https://monome.org/docs/norns/reference/lib/musicutil
+
+-- Ben! Populate this table with the CC mappings you want to use
+cc_mappings = {
+    { channel = 1, cc = 1, min = 0, max = 127 },
+    { channel = 1, cc = 2, min = 0, max = 127 },
+    { channel = 1, cc = 3, min = 0, max = 127 },
+    { channel = 1, cc = 4, min = 0, max = 127 }
+}
 
 -- Move files to data folder if not there already
 if not util.file_exists(_path.data .. "loudnumbers_norns/csv/_temperature.csv") then
@@ -377,6 +386,22 @@ function play_note()
             );
             -- Send it
             my_midi:cc(params:get("midi_cc"), cc_val, params:get("midi_channel"))
+
+            -- Ben! This is the bit that implements the CC mappings at the top
+            for i = 1, #cc_mappings do
+                local cc_val = math.floor(
+                    map(
+                        data[position],
+                        params:get("datamin"),
+                        params:get("datamax"),
+                        cc_mappings[i].min,
+                        cc_mappings[i].max,
+                        true
+                    )
+                )
+                my_midi:cc(cc_mappings[i].cc, cc_val, cc_mappings[i].channel)
+            end
+            -- It ends here
         end
     end
 end
