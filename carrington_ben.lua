@@ -1,9 +1,9 @@
 ---@diagnostic disable: undefined-global, lowercase-global
--- loudnumbers_norns
--- v0.17 @duncangeere
--- https://llllllll.co/t/51353
+-- carrington_ben
+-- v0.1 @duncangeere
 --
 -- data sonification with Norns
+-- define MIDI ccs in the code
 --
 -- K1 + E1 select data column
 -- KEY 2 toggle play/pause
