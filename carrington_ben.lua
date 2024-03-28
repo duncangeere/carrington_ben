@@ -28,20 +28,12 @@ music = require("musicutil")
 
 -- Ben! Populate this table with the CC mappings you want to use
 cc_mappings = {
-    { channel = 1, cc = 1, min = 0, max = 127 },
-    { channel = 1, cc = 2, min = 0, max = 127 },
-    { channel = 1, cc = 3, min = 0, max = 127 },
-    { channel = 1, cc = 4, min = 0, max = 127 }
+    { channel = 1, cc = 1, ccmin = 0, ccmax = 127, column = "declination", datamin = 6.1,  datamax = 82.1 },
+    { channel = 1, cc = 2, ccmin = 0, ccmax = 127, column = "horizforce",  datamin = -100, datamax = 100 },
+    { channel = 1, cc = 3, ccmin = 0, ccmax = 127, column = "storm",       datamin = 0,    datamax = 1 },
+    { channel = 1, cc = 4, ccmin = 0, ccmax = 127, column = "storm",       datamin = 0,    datamax = 1 }
 }
 
--- Move files to data folder if not there already
-if not util.file_exists(_path.data .. "loudnumbers_norns/csv/_temperature.csv") then
-    os.execute("mkdir " ..
-        _path.data ..
-        "loudnumbers_norns/csv/ && mv " ..
-        _path.code ..
-        "loudnumbers_norns/ignorethisfolder/_temperature.csv " .. _path.data .. "loudnumbers_norns/csv/_temperature.csv")
-end
 -- Import library to update parameters (Thanks Eigen!)
 local p_option = require "core/params/option"
 
@@ -198,7 +190,7 @@ function init()
 
     -- Midi options
     params:add_binary("send_midi_notes", "Play MIDI notes?", "toggle", 1)
-    params:add_binary("send_midi_cc", "Send MIDI CC?", "toggle", 0)
+    params:add_binary("send_midi_cc", "Send MIDI CC?", "toggle", 1)
 
     -- Midi gate length
     params:add_control("midi_length", "MIDI note length (s)",
@@ -391,11 +383,11 @@ function play_note()
             for i = 1, #cc_mappings do
                 local cc_val = math.floor(
                     map(
-                        data[position],
-                        params:get("datamin"),
-                        params:get("datamax"),
-                        cc_mappings[i].min,
-                        cc_mappings[i].max,
+                        columns[cc_mappings[i].column][position],
+                        cc_mappings[i].datamin,
+                        cc_mappings[i].datamax,
+                        cc_mappings[i].ccmin,
+                        cc_mappings[i].ccmax,
                         true
                     )
                 )
@@ -597,8 +589,8 @@ function list_file_names(callback)
         callback()
     end
 
-    norns.system_cmd('find ' .. _path.data ..
-        'loudnumbers_norns/csv -name *.csv', cb)
+    norns.system_cmd('find ' .. _path.code ..
+        'carrington_ben -name *.csv', cb)
 end
 
 -- Reloads the data once a new csv file is selected
@@ -609,7 +601,7 @@ function reload_data()
     counter = 1;
 
     -- open the file
-    f = csv.open(_path.data .. "loudnumbers_norns/csv/" ..
+    f = csv.open(_path.code .. "carrington_ben/" ..
         file_names[params:get("data file")] .. ".csv",
         { separator = sep, header = true })
 
